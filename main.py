@@ -47,6 +47,8 @@ for x in range(len(content)):
                 add(found,'.css')
         elif '.jpg' in line:
                 add(found,'.jpg')
+        elif '.gif' in line:
+                add(found,'.gif')
 
 for x in range(len(sources)):
         source=sources[x]
@@ -63,7 +65,7 @@ for x in range(len(sources)):
                                         pass
                                 else:
                                         os.system('mkdir '+filename+file)
-                        if '.jpg' in source:
+                        if '.jpg' in source or '.gif' in source:
                                 os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
                         else:
                                 getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
