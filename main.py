@@ -39,7 +39,7 @@ for x in range(len(content)):
                 line[num]='"'
                 "".join(line)
         found=str(line)
-        if ('href' in line or 'src' in line) and 'http' not in line:
+        if 'href' in line or 'src' in line:
                 if '.js' in line:
                         add(found,'.js')
                 elif '.php' in line:
@@ -57,20 +57,21 @@ for x in range(len(content)):
 
 for x in range(len(sources)):
         source=sources[x]
-        #print source
-        dir=source
-        file=''
-        if source.find('/')!=source.rfind('/'):
-                for y in range(source.count('/')-1):
-                        file=file+dir[dir.find('/'):dir.find('/', dir.find('/')+1)]
-                        dir=dir[dir.find('/', dir.find('/')+1):]
-                        myDir=Path(filename+file)
-                        if myDir.is_dir():
-                                pass
+        if 'http' in source:
+                #print source
+                dir=source
+                file=''
+                if source.find('/')!=source.rfind('/'):
+                        for y in range(source.count('/')-1):
+                                file=file+dir[dir.find('/'):dir.find('/', dir.find('/')+1)]
+                                dir=dir[dir.find('/', dir.find('/')+1):]
+                                myDir=Path(filename+file)
+                                if myDir.is_dir():
+                                        pass
+                                else:
+                                        os.system('mkdir '+filename+file)
+                        if '.jpg' in source or '.gif' in source:
+                                os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
                         else:
-                                os.system('mkdir '+filename+file)
-                if '.jpg' in source or '.gif' in source:
-                        os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
-                else:
-                        getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
+                                getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
 
