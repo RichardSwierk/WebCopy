@@ -18,7 +18,6 @@ def getWebsite(url,path):
         f.write(html.content)
         f.close()
 
-getWebsite(website,filename+'/index.html')
 def getContent(pathToFile):
         with open(pathToFile) as f:
                 content=f.readlines()
@@ -31,10 +30,26 @@ def add(found,lang):
         found=found[:found.find(lang)+len(lang)]
         found=found[found.rfind(' ')+1:]
         found=found[found.rfind('"')+1:]
-        #print found
+        print found
         sources.append(found)
 
-def findSources(content):
+def getFileType(found):
+        if '.js' in found:
+                add(found,'.js')
+        elif '.php' in found:
+                add(found,'.php')
+        elif '.css' in found:
+                add(found,'.css')
+        elif '.jpg' in found:
+                add(found,'.jpg')
+        elif '.gif' in found:
+                add(found,'.gif')
+        elif '.htm' in found:
+                add(found,'.htm')
+        elif '.html' in found:
+                add(found,'html')
+
+def findSources(content,loopNum):
         for x in range(len(content)):
                 line=content[x]
                 if "'" in line:
@@ -43,23 +58,13 @@ def findSources(content):
                         line[num]='"'
                         "".join(line)
                 found=str(line)
-                if 'href' in found or 'src' in found:
-                        if '.js' in found:
-                                add(found,'.js')
-                        elif '.php' in found:
-                                add(found,'.php')
-                        elif '.css' in found:
-                                add(found,'.css')
-                        elif '.jpg' in found:
-                                add(found,'.jpg')
-                        elif '.gif' in found:
-                                add(found,'.gif')
-                        elif '.htm' in found:
-                                add(found,'.htm')
-                        elif '.html' in found:
-                                add(found,'html')
+                if loopNum==1:
+                        if 'href' in found or 'src' in found:
+                                getFileType(found)
+                else:
+                        if '"' in found and 'url' in found:
+                                getFileType(found)
 
-findSources(getContent(filename+'/index.html'))
 def getSources():
         for x in range(len(sources)):
                 source=sources[x]
@@ -76,14 +81,19 @@ def getSources():
                                                 pass
                                         else:
                                                 os.system('mkdir '+filename+file)
-                                filePaths.append(filename+source[source.find('/'):])
-                                print source
-                                if '.jpg' in source or '.gif' in source:
-                                        os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
-                                else:
-                                        getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
+                        if '.jpg' in source or '.gif' in source:
+                                #os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
+                                pass
+                        else:
+                                getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
+                                if '.css' not in source:
+                                        filePaths.append(filename+source[source.find('/'):])
 
+getWebsite(website,filename+'/index.html')
+findSources(getContent(filename+'/index.html'),1)
 getSources()
 sources=[]
 for x in range(len(filePaths)):
-        
+        #print filePaths[x]
+        source=filePaths[x]
+        findSources(getContent(source),2)
