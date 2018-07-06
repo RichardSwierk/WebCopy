@@ -28,7 +28,7 @@ def add(found,lang):
         found=line[:line.find(lang)+len(lang)]
         found=found[found.rfind(' ')+1:]
         found=found[found.rfind('"')+1:]
-        print found
+        #print found
         sources.append(found)
 
 for x in range(len(content)):
