@@ -27,7 +27,9 @@ content=[x.strip() for x in content]
 def add(found,lang):
         found=line[:line.find(lang)+len(lang)]
         found=found[found.rfind(' ')+1:]
-        sources.append(found[found.rfind('"')+1:])
+        found=found[found.rfind('"')+1:]
+        print found
+        sources.append(found)
 
 for x in range(len(content)):
         line=content[x]
@@ -43,6 +45,8 @@ for x in range(len(content)):
                 add(found,'.php')
         elif '.css' in line:
                 add(found,'.css')
+        elif '.jpg' in line:
+                add(found,'.jpg')
 
 for x in range(len(sources)):
         source=sources[x]
@@ -59,5 +63,8 @@ for x in range(len(sources)):
                                         pass
                                 else:
                                         os.system('mkdir '+filename+file)
-                        getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
+                        if '.jpg' in source:
+                                os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
+                        else:
+                                getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
 
