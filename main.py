@@ -30,31 +30,32 @@ def add(found,lang):
         found=found[found.rfind('"')+1:]
         print found
         sources.append(found)
-
-for x in range(len(content)):
-        line=content[x]
-        if "'" in line:
-                line=list(line)
-                num=int(line.index("'"))
-                line[num]='"'
-                "".join(line)
-        found=str(line)
-        if 'href' in line or 'src' in line:
-                if '.js' in line:
-                        add(found,'.js')
-                elif '.php' in line:
-                        add(found,'.php')
-                elif '.css' in line:
-                        add(found,'.css')
-                elif '.jpg' in line:
-                        add(found,'.jpg')
-                elif '.gif' in line:
-                        add(found,'.gif')
-                elif '.htm' in line:
-                        add(found,'.htm')
-                elif '.html' in line:
-                        add(found,'html')
-
+        
+def findSources(content):
+        for x in range(len(content)):
+                line=content[x]
+                if "'" in line:
+                        line=list(line)
+                        num=int(line.index("'"))
+                        line[num]='"'
+                        "".join(line)
+                found=str(line)
+                if 'href' in line or 'src' in line:
+                        if '.js' in line:
+                                add(found,'.js')
+                        elif '.php' in line:
+                                add(found,'.php')
+                        elif '.css' in line:
+                                add(found,'.css')
+                        elif '.jpg' in line:
+                                add(found,'.jpg')
+                        elif '.gif' in line:
+                                add(found,'.gif')
+                        elif '.htm' in line:
+                                add(found,'.htm')
+                        elif '.html' in line:
+                                add(found,'html')
+findSources(content)
 for x in range(len(sources)):
         source=sources[x]
         if 'http' in source:
