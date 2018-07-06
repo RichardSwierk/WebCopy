@@ -5,8 +5,8 @@ from pathlib import Path
 sources=[]
 website='http://www.suzannecollinsbooks.com/'
 filename=website[website.find('www.')+4:website.find('.com')]
-my_dir=Path(filename)
 
+my_dir=Path(filename)
 if my_dir.is_dir():
         os.system('rm -r '+filename)
 os.system('mkdir '+filename)
@@ -28,7 +28,7 @@ def add(found,lang):
         found=line[:line.find(lang)+len(lang)]
         found=found[found.rfind(' ')+1:]
         found=found[found.rfind('"')+1:]
-        #print found
+        print found
         sources.append(found)
 
 for x in range(len(content)):
@@ -39,34 +39,38 @@ for x in range(len(content)):
                 line[num]='"'
                 "".join(line)
         found=str(line)
-        if '.js' in line:
-                add(found,'.js')
-        elif '.php' in line:
-                add(found,'.php')
-        elif '.css' in line:
-                add(found,'.css')
-        elif '.jpg' in line:
-                add(found,'.jpg')
-        elif '.gif' in line:
-                add(found,'.gif')
+        if ('href' in line or 'src' in line) and 'http' not in line:
+                if '.js' in line:
+                        add(found,'.js')
+                elif '.php' in line:
+                        add(found,'.php')
+                elif '.css' in line:
+                        add(found,'.css')
+                elif '.jpg' in line:
+                        add(found,'.jpg')
+                elif '.gif' in line:
+                        add(found,'.gif')
+                elif '.htm' in line:
+                        add(found,'.htm')
+                elif '.html' in line:
+                        add(found,'html')
 
 for x in range(len(sources)):
         source=sources[x]
-        if 'http' not in source:
-                #print source
-                dir=source
-                file=''
-                if source.find('/')!=source.rfind('/'):
-                        for y in range(source.count('/')-1):
-                                file=file+dir[dir.find('/'):dir.find('/', dir.find('/')+1)]
-                                dir=dir[dir.find('/', dir.find('/')+1):]
-                                myDir=Path(filename+file)
-                                if myDir.is_dir():
-                                        pass
-                                else:
-                                        os.system('mkdir '+filename+file)
-                        if '.jpg' in source or '.gif' in source:
-                                os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
+        #print source
+        dir=source
+        file=''
+        if source.find('/')!=source.rfind('/'):
+                for y in range(source.count('/')-1):
+                        file=file+dir[dir.find('/'):dir.find('/', dir.find('/')+1)]
+                        dir=dir[dir.find('/', dir.find('/')+1):]
+                        myDir=Path(filename+file)
+                        if myDir.is_dir():
+                                pass
                         else:
-                                getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
+                                os.system('mkdir '+filename+file)
+                if '.jpg' in source or '.gif' in source:
+                        os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
+                else:
+                        getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
 
