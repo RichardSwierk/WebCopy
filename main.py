@@ -3,6 +3,7 @@ import requests, os
 from pathlib import Path
 
 sources=[]
+oldSources=[]
 filePaths=[]
 website='http://www.suzannecollinsbooks.com/'
 filename=website[website.find('www.')+4:website.find('.com')]
@@ -30,8 +31,9 @@ def add(found,lang):
         found=found[:found.find(lang)+len(lang)]
         found=found[found.rfind(' ')+1:]
         found=found[found.rfind('"')+1:]
-        print found
-        sources.append(found)
+        if found not in sources and found not in oldSources:
+                print found
+                sources.append(found)
 
 def getFileType(found):
         if '.js' in found:
@@ -49,7 +51,7 @@ def getFileType(found):
         elif '.html' in found:
                 add(found,'html')
 
-def findSources(content,loopNum):
+def findSources(content):
         for x in range(len(content)):
                 line=content[x]
                 if "'" in line:
@@ -58,12 +60,8 @@ def findSources(content,loopNum):
                         line[num]='"'
                         "".join(line)
                 found=str(line)
-                if loopNum==1:
-                        if 'href' in found or 'src' in found:
-                                getFileType(found)
-                else:
-                        if '"' in found and 'url' in found:
-                                getFileType(found)
+                if 'href' in found or 'src' in found:
+                        getFileType(found)
 
 def getSources():
         for x in range(len(sources)):
@@ -86,14 +84,16 @@ def getSources():
                                 #pass
                         else:
                                 getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
-                                #if '.css' not in source:
-                                        #filePaths.append(filename+source[source.find('/'):])
+                                if '.htm' in source or '.html' in source:
+                                        filePaths.append(filename+source[source.find('/'):])
 
 getWebsite(website,filename+'/index.html')
-findSources(getContent(filename+'/index.html'),1)
+findSources(getContent(filename+'/index.html'))
 getSources()
-#sources=[]
-#for x in range(len(filePaths)):
-#        #print filePaths[x]
-#        source=filePaths[x]
-#        findSources(getContent(source),2)
+oldSources=sources
+sources=[]
+for x in range(len(filePaths)):
+        #print filePaths[x]
+        source=filePaths[x]
+        findSources(getContent(source))
+getSources()
