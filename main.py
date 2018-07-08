@@ -80,7 +80,7 @@ def getSources():
                                         else:
                                                 os.system('mkdir '+filename+file)
                         if '.jpg' in source or '.gif' in source:
-                                os.system('wget '+website+source[source.find('/')+1:]+' -P '+filename+source[source.find('/'):])
+                                os.system('wget -P '+filename+source[source.find('/'):source.rfind('/')+1]+' '+website+source[source.find('/')+1:])
                                 #pass
                         else:
                                 getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
