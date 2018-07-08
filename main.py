@@ -38,17 +38,19 @@ def add(found,lang):
 def getFileType(found):
         if '.js' in found:
                 add(found,'.js')
-        elif '.php' in found:
+        if '.php' in found:
                 add(found,'.php')
-        elif '.css' in found:
+        if '.css' in found:
                 add(found,'.css')
-        elif '.jpg' in found:
+        if '.jpg' in found:
                 add(found,'.jpg')
-        elif '.gif' in found:
+        if '.gif' in found:
                 add(found,'.gif')
-        elif '.htm' in found:
+        if '.png' in found:
+                add(found,'.png')
+        if '.htm' in found:
                 add(found,'.htm')
-        elif '.html' in found:
+        if '.html' in found:
                 add(found,'html')
 
 def findSources(content):
