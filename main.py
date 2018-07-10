@@ -40,7 +40,6 @@ def add(found,lang):
                         print found
                 sources.append(found)
 
-
 def findSources(content):
         for x in range(len(content)):
                 line=content[x]
@@ -50,7 +49,7 @@ def findSources(content):
                         line[num]='"'
                         "".join(line)
                 found=str(line)
-                if 'href' in found or 'src' in found:
+                if ('href' in found or 'src' in found) and ('http' not in found or 'https' not in found):
                         if '.js' in found:
                                 add(found,'.js')
                         if '.php' in found:
@@ -71,25 +70,23 @@ def findSources(content):
 def getSources():
         for x in range(len(sources)):
                 source=sources[x]
-                if 'http' not in source:
-                        #print source
-                        dir=source
-                        file=''
-                        if source.find('/')!=source.rfind('/'):
-                                for y in range(source.count('/')-1):
-                                        file=file+dir[dir.find('/'):dir.find('/', dir.find('/')+1)]
-                                        dir=dir[dir.find('/', dir.find('/')+1):]
-                                        myDir=Path(filename+file)
-                                        if myDir.is_dir():
-                                                pass
-                                        else:
-                                                os.system('mkdir '+filename+file)
-                        if '.jpg' in source or '.gif' in source:
-                                os.system('wget -P '+filename+source[source.find('/'):source.rfind('/')+1]+' '+website+source[source.find('/')+1:]+' > download.log')
-                        else:
-                                getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
-                                if '.htm' in source or '.html' in source:
-                                        filePaths.append(filename+source[source.find('/'):])
+                dir=source
+                file=''
+                if source.find('/')!=source.rfind('/'):
+                        for y in range(source.count('/')-1):
+                                file=file+dir[dir.find('/'):dir.find('/', dir.find('/')+1)]
+                                dir=dir[dir.find('/', dir.find('/')+1):]
+                                myDir=Path(filename+file)
+                                if myDir.is_dir():
+                                        pass
+                                else:
+                                        os.system('mkdir '+filename+file)
+                if '.jpg' in source or '.gif' in source:
+                        os.system('wget -P '+filename+source[source.find('/'):source.rfind('/')+1]+' '+website+source[source.find('/')+1:]+' > download.log')
+                else:
+                        getWebsite(website+source[source.find('/')+1:],filename+source[source.find('/'):])
+                        if '.htm' in source or '.html' in source:
+                                filePaths.append(filename+source[source.find('/'):])
 
 getWebsite(website,filename+'/index.html')
 findSources(getContent(filename+'/index.html'))
